@@ -1,0 +1,3 @@
+[submodule "WeOptPy"]
+	path = WeOptPy
+	url = https://github.com/kb2623/WeOptPy.git
