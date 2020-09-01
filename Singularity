@@ -13,14 +13,12 @@ DESCRIPTION Debian 10 (buster) image for compute server.
 WeOptPy /opt/WeOptPy
 
 %post
-# Add env variables
-echo 'export DEV_PKGS=g++ gcc cmake git openssh-client' >> $SINGULARITY_ENVIRONMENT
-echo 'export LIB_PKGS=libc6-dev libssl-dev libcurl4-openssl-dev' >> $SINGULARITY_ENVIRONMENT
-echo 'export PRG_PKGS=curl make bash ca-certificates' >> $SINGULARITY_ENVIRONMENT
-
 # Install build tools and tools
 apt update
-apt install --no-install-recommends -y "${DEV_PKGS}" "${LIB_PKGS}" "${PRG_PKGS}"
+apt install --no-install-recommends -y \
+	g++ gcc cmake git openssh-client \
+	libc6-dev libssl-dev libcurl4-openssl-dev \
+	curl make bash ca-certificates
 
 # Build spse and install
 cd /opt/WeOptPy
@@ -28,13 +26,14 @@ make build install
 
 # Clean
 cd /tmp && rm -rf /tmp/spse
-apt remove -y ${DEV_PKGS} && apt autoremove -y
+apt remove -y g++ gcc cmake git openssh-client
+apt autoremove -y
 
 %environment
 export LISTEN_PORT=12345
 export LC_ALL=C
 
 %runscript
-echo "This is what happens when you run the container..."
+Spse1.4 help
 
 
