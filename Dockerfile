@@ -2,7 +2,7 @@
 ARG PYTHON_VERSION=3.7
 ARG ALPINE_VERSION=3.10
 
-FROM python:$(PYTHON_VERSION)-alpine$(ALPINE_VERSION)
+FROM python:${PYTHON_VERSION}-alpine${ALPINE_VERSION}
 
 LABEL maintainer="Klemen Berkovic <klemen.berkovic1@um.si>"
 LABEL description="Debian 10 (buster) image for compute server."
@@ -15,7 +15,7 @@ ENV LANG C.UTF-8
 
 # Install additional programs
 RUN apk add --no-cache --virtual .progs-deps make bash \
- && apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers
+ && apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers libffi-dev
 # Install pipenv
 RUN pip install --upgrade pip \ 
  && pip install pipenv
@@ -35,8 +35,6 @@ RUN apk del .build-deps
 
 USER weoptpy
 WORKDIR /home/weoptpy
-
-EXPOSE 4242
 
 ENTRYPOINT bash
 

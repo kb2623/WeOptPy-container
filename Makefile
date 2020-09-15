@@ -1,5 +1,5 @@
-NAME=spse
-TAG=1.4
+NAME=weoptpy
+TAG=first
 CMD=bash
 
 docker_build:
