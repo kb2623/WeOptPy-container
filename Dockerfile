@@ -1,27 +1,42 @@
-FROM python:3.8-slim-buster
+# Python and Alpine linux version
+ARG PYTHON_VERSION=3.7
+ARG ALPINE_VERSION=3.10
+
+FROM python:$(PYTHON_VERSION)-alpine$(ALPINE_VERSION)
 
 LABEL maintainer="Klemen Berkovic <klemen.berkovic1@um.si>"
 LABEL description="Debian 10 (buster) image for compute server."
 
+ARG USER_ID=1000
+ARG GROUP_ID=1000
+
 ENV PATH $PATH:/usr/local/bin
 ENV LANG C.UTF-8
-ENV DEV_PKG="g++ gcc cmake git openssh-client"
-ENV LIB_PKG="libc6-dev libssl-dev libcurl4-openssl-dev"
-ENV RUN_PKG="curl make bash ca-certificates"
 
 # Install additional programs
-RUN apt update \
- && apt install -y --no-install-recommends ${DEV_PKG} ${LIB_PKG} ${RUN_PKG}
+RUN apk add --no-cache --virtual .progs-deps make bash \
+ && apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers
+# Install pipenv
+RUN pip install --upgrade pip \ 
+ && pip install pipenv
 
 # Add starter sript
 COPY WeOptPy /opt/WeOptPy
 
 # BUILD WeOptPy
-RUN cd /opt/WeOptPy \
- && make build install
+RUN make -C /opt/WeOptPy build \
+ && pip install --compile /opt/WeOptPy/dist/WeOptPy*.whl
 
-# Clean
-RUN rm -rf /tmp/spse \
- && apt remove -y ${DEV_PKG} \
- && apt autoremove -y
+# Create user
+RUN addgroup -g ${GROUP_ID} -S weoptpy \
+ && adduser -S -D -H -u ${USER_ID} -h /home/weoptpy -s /bin/sh -G weoptpy -g weoptpy weoptpy
+
+RUN apk del .build-deps
+
+USER weoptpy
+WORKDIR /home/weoptpy
+
+EXPOSE 4242
+
+ENTRYPOINT bash
 
