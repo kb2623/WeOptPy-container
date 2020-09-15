@@ -15,7 +15,7 @@ ENV LANG C.UTF-8
 
 # Install additional programs
 RUN apk add --no-cache --virtual .progs-deps make bash \
- && apk add --no-cache --virtual .build-deps gcc libc-dev linux-headers libffi-dev
+ && apk add --no-cache --virtual .build-deps gcc g++ gfortran linux-headers libc-dev musl-dev libffi-dev lapack-dev
 # Install pipenv
 RUN pip install --upgrade pip \ 
  && pip install pipenv
