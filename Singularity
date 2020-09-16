@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: debian:10
+From: python:3.7-slim
 
 %help
 This is a demo container used to illustrate a def file that
@@ -13,27 +13,21 @@ DESCRIPTION Debian 10 (buster) image for compute server.
 WeOptPy /opt/WeOptPy
 
 %post
-# Install build tools and tools
 apt update
-apt install --no-install-recommends -y \
-	g++ gcc cmake git openssh-client \
-	libc6-dev libssl-dev libcurl4-openssl-dev \
-	curl make bash ca-certificates
-
-# Build spse and install
-cd /opt/WeOptPy
-make build install
-
-# Clean
-cd /tmp && rm -rf /tmp/spse
-apt remove -y g++ gcc cmake git openssh-client
+apt install -y --no-install-recommends gcc g++ gfortran libc-dev liblapack-dev
+apt install -y --no-install-recommends bash make
+pip install --upgrade pip
+pip install pipenv
+make -C /opt/WeOptPy PIPENV_INSTALL_TIMEOUT=10000 PIPENV_TIMEOUT=100000 PIPENV_MAX_RETRIES=5 PIPENV_SKIP_LOCK=True PIPENV_NOSPIN=True build
+pip install --compile /opt/WeOptPy/dist/WeOptPy*.whl
+apt purge -y gcc g++ gfortran libc-dev liblapack-dev
 apt autoremove -y
 
 %environment
-export LISTEN_PORT=12345
-export LC_ALL=C
+export LANG=C.UTF-8
+export PATH=$PATH:/usr/local/bin
 
 %runscript
-Spse1.4 help
-
+echo "Starting Singularity container for WeOptPy!!!"
+bash "$@"
 
