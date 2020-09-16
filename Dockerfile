@@ -17,6 +17,9 @@ ENV LANG C.UTF-8
 ENV build_deps="gcc g++ gfortran libc-dev liblapack-dev" 
 ENV progs_deps="make bash"
 
+USER root
+WORKDIR /root
+
 # Install additional programs
 RUN apt update \
  && apt install -y --no-install-recommends ${build_deps} \
@@ -29,7 +32,7 @@ RUN pip install --upgrade pip \
 COPY WeOptPy /opt/WeOptPy
 
 # BUILD WeOptPy
-RUN make -C /opt/WeOptPy PIPENV_INSTALL_TIMEOUT=10000 PIPENV_TIMEOUT=100000 PIPENV_MAX_RETRIES=5 PIPENV_SKIP_LOCK=True PIPENV_NOSPIN=True build \
+RUN make -C /opt/WeOptPy PIPENV_INSTALL_TIMEOUT=10000 PIPENV_TIMEOUT=100000 PIPENV_MAX_RETRIES=5 PIPENV_SKIP_LOCK=True PIPENV_NOSPIN=True build install \
  && pip install --compile /opt/WeOptPy/dist/WeOptPy*.whl
 
 # Create user

@@ -18,7 +18,7 @@ apt install -y --no-install-recommends gcc g++ gfortran libc-dev liblapack-dev
 apt install -y --no-install-recommends bash make
 pip install --upgrade pip
 pip install pipenv
-make -C /opt/WeOptPy PIPENV_INSTALL_TIMEOUT=10000 PIPENV_TIMEOUT=100000 PIPENV_MAX_RETRIES=5 PIPENV_SKIP_LOCK=True PIPENV_NOSPIN=True build
+make -C /opt/WeOptPy PIPENV_INSTALL_TIMEOUT=10000 PIPENV_TIMEOUT=100000 PIPENV_MAX_RETRIES=5 PIPENV_SKIP_LOCK=True PIPENV_NOSPIN=True build install
 pip install --compile /opt/WeOptPy/dist/WeOptPy*.whl
 apt purge -y gcc g++ gfortran libc-dev liblapack-dev
 apt autoremove -y
