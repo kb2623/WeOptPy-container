@@ -33,7 +33,8 @@ COPY WeOptPy /opt/WeOptPy
 
 # BUILD WeOptPy
 RUN make -C /opt/WeOptPy PIPENV_INSTALL_TIMEOUT=10000 PIPENV_TIMEOUT=100000 PIPENV_MAX_RETRIES=5 PIPENV_SKIP_LOCK=True PIPENV_NOSPIN=True build install \
- && pip install --compile /opt/WeOptPy/dist/WeOptPy*.whl
+ && pip install --compile /opt/WeOptPy/dist/WeOptPy*.whl \
+ && make -C /opt/WeOptPy clean
 
 # Create user
 RUN groupadd --gid ${GROUP_ID} weoptpy \
