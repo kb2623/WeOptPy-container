@@ -15,7 +15,7 @@ ENV PATH $PATH:/usr/local/bin
 ENV LANG C.UTF-8
 # Programs and librariys instaled
 ENV build_deps="gcc g++ gfortran libc-dev liblapack-dev" 
-ENV progs_deps="make bash"
+ENV progs_deps="make bash ipython"
 
 USER root
 WORKDIR /root
